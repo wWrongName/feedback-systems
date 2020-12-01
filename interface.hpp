@@ -2,8 +2,22 @@
 #define __FS_INTERFACE__
 
 #include <iostream>
+#include "system.hpp"
+#include "validation.hpp"
 
-using namespace std;
+#define GREETINGS "Hello! This is the feedback systems simulator. Type 'help' to get the list of the commands."
+#define ERR_COMMAND "Wrong command. Please, type help to get the list of the commands."
+
+#define SIM_MESSAGE "Choose system to simulate: ret(algorithm with return), exp(algorithm with expectation)"
+#define SIM_EXIT "Exit the simulation"
+
+#define HELP_MESSAGE "Commands: \n\
+    start - get the greetings \n\
+    help - print the list of the commands \n\
+    quit(exit) - shut the programm \n\
+    simulate - begin simulation \n\
+    ret - algorithm with return (works after command simulate) \n\
+    exp - algorithm with expectation (works after command simulate)"
 
 class Interface {
     public:
@@ -14,7 +28,9 @@ class Interface {
         void greetings();
         void help();
         void print_info(string);
+        void simulation();
         void read_info();
+        template<class t_sys> void alg_sim(t_sys);
 };
 
 #endif
