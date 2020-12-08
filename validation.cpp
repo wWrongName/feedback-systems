@@ -20,7 +20,7 @@ float validate_number(string number) {
         }
     }
     if (multiplier == 0) {
-        return ret_val / 10;
+        return ret_val;
     }
     else if (multiplier == 1) {
         return -1;

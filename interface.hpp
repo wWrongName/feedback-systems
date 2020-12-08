@@ -1,9 +1,10 @@
 #ifndef __FS_INTERFACE__
 #define __FS_INTERFACE__
 
-#include <iostream>
 #include "system.hpp"
 #include "validation.hpp"
+
+#define AMOUNT_OF_SIMULATIONS 1000
 
 #define GREETINGS "Hello! This is the feedback systems simulator. Type 'help' to get the list of the commands."
 #define ERR_COMMAND "Wrong command. Please, type help to get the list of the commands."
@@ -31,6 +32,8 @@ class Interface {
         void simulation();
         void read_info();
         template<class t_sys> void alg_sim(t_sys);
+        template<class t_sys> float count_average(t_sys);
+        template<class t_sys> void count_utility(t_sys);
 };
 
 #endif

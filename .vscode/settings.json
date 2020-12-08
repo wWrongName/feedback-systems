@@ -3,6 +3,11 @@
         "iostream": "cpp",
         "string": "cpp",
         "xstring": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "codecvt": "cpp",
+        "xlocale": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "*.ipp": "cpp"
     }
 }
