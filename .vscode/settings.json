@@ -8,6 +8,9 @@
         "xlocale": "cpp",
         "functional": "cpp",
         "ratio": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp"
     }
 }

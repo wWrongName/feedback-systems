@@ -16,7 +16,7 @@ float validate_number(string number) {
             multiplier = 1;
         }
         else {
-            return -1.0;
+            return -1;
         }
     }
     if (multiplier == 0) {

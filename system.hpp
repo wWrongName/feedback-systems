@@ -12,6 +12,13 @@ using namespace std;
 enum user_type {u_sender, u_receiver};
 enum message {valid, invalid};
 
+class Message {
+    public:
+        Message(int);
+        bool state;
+        int time;
+};
+
 class User {
     public:
         User(bool);
@@ -19,6 +26,7 @@ class User {
         void def_response(bool);
         bool get_message();
         void def_message(bool);
+        int last_val;
     private:
         bool message;
         bool response;
@@ -45,7 +53,6 @@ class System {
         int limit;
         int send_counter;
         uint time;
-        bool expectation;
         uint positive_msgs;
 };
 
@@ -59,6 +66,10 @@ class AlgWithReturn : public System {
     public:
         AlgWithReturn(float, float, uint, int);
         void regen_cycle();
+        vector<Message*> msgs;
+        void tick();
+        void send_message(Message*);
+        void send_response(bool, Message*);
 };
 
 #endif

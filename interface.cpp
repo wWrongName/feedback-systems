@@ -64,8 +64,11 @@ void Interface::simulation() {
         int limit;
         if (command == "unlimited" || command == "-1")
             limit = -1;
-        else 
+        else {
             limit = (int)validate_number(command);
+            if (limit == -1)
+                print_info("Wrong limit");
+        }
         if (tau >= 0 && is_valid_fraction(p_ret) && is_valid_fraction(p_msg)) {
             if (mode == "ret") {
                 alg_sim(AlgWithReturn(p_msg, p_ret, tau, limit));
@@ -77,7 +80,7 @@ void Interface::simulation() {
                 print_info(ERR_COMMAND);
         }
         else
-            print_info("Wrong tau");
+            print_info("Wrong data (tau | p_ret | p_msg)");
     }
     command = "start";
 };
@@ -99,14 +102,15 @@ template<class t_sys> float Interface::count_average(t_sys system) {
 };
 
 template<class t_sys> void Interface::count_utility(t_sys system) {
-    for (float t = 0; t <= 1; t++) {
+    for (float t = 0; t <= 1; t += 0.01) {
         system.change_tau(t);
         while (true) {
             system.regen_cycle();
             if (system.timeout())
                 break;
         }
-        system.get_positive_msgs(); // write into file pos_msgs and tau
+        system.get_positive_msgs(); 
+        // write into file positive_msgs and tau
     }
 };
 

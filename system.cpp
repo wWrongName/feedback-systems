@@ -1,9 +1,15 @@
 #include "system.hpp"
 
+Message::Message(int t) {
+    state = valid;
+    time = t;
+};
+
 User::User(bool u_type) {
     message = true;
     response = false;
     type = u_type;
+    last_val = 0;
 };
 bool User::get_response() {
     if (type != u_sender)
@@ -53,14 +59,13 @@ uint System::get_positive_msgs() {
     return positive_msgs;
 };
 bool System::timeout() {
-    return TIMEOUT >= time;
+    return TIMEOUT < time;
 };
 void System::change_tau(float t) {
     tau = t;
 };
 
 AlgWithExpectation::AlgWithExpectation(float p_msg, float p_ret, uint t, int l) : System(p_msg, p_ret, t, l) {
-    expectation = true;
 };
 void AlgWithExpectation::regen_cycle() {
     if (send_counter < limit || limit == -1) {
@@ -78,8 +83,60 @@ void AlgWithExpectation::regen_cycle() {
 };
 
 AlgWithReturn::AlgWithReturn(float p_msg, float p_ret, uint t, int l) : System(p_msg, p_ret, t, l) {
-    expectation = false;
 };
 void AlgWithReturn::regen_cycle() {
-    cout << "TODO\n"; // TODO...
+    if (send_counter < limit || limit == -1) {
+        msgs.push_back(new Message(tau));
+        tick();
+        for (int i = 0; i < tau; i++) {
+            msgs.push_back(new Message(tau));
+            tick();
+        }
+    }
+    else
+        sender.def_response(valid); // for breaking outside loop
+};
+
+void AlgWithReturn::tick() {
+    for (int i = 0; i < msgs.size(); i++) {
+        bool not_delete = false;
+        if (msgs[i]->time == tau) {
+            send_message(msgs[i]);
+            if (receiver.last_val + 1 == i) {
+                receiver.last_val = i;
+                send_response(valid, msgs[i]);
+                positive_msgs++;
+            }
+            else 
+                send_response(invalid, msgs[i]);
+        }
+        else if (msgs[i]->time == 0) {
+            if (msgs[i]->state == valid) {
+                positive_msgs++;
+                msgs[i]->time = -1;
+            }
+            else {
+                msgs.erase(msgs.begin() + i, msgs.end());
+                not_delete = true;
+            }
+        }
+        else {}
+        if (!not_delete)
+            if (msgs[i]->time != -1)
+                msgs[i]->time--;
+    }
+    time++;
+};
+
+void AlgWithReturn::send_message(Message* msg) {
+    msg->state = valid;
+    float err = rand() % RAND_MAX;
+    if (err <= P_msg)
+        msg->state = invalid;
+};
+void AlgWithReturn::send_response(bool st, Message* msg) {
+    msg->state = st;
+    float err = rand() % RAND_MAX;
+    if (err <= P_ret)
+        msg->state = !msg->state;
 };
