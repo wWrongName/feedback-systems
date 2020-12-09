@@ -1,6 +1,7 @@
 #include <string>
 #include <typeinfo>
 #include "interface.hpp"
+#include <algorithm>
 
 Interface::Interface() {
     command = "start";
@@ -71,7 +72,11 @@ void Interface::simulation() {
         }
         if (tau >= 0 && is_valid_fraction(p_ret) && is_valid_fraction(p_msg)) {
             if (mode == "ret") {
-                alg_sim(AlgWithReturn(p_msg, p_ret, tau, limit));
+                auto alg = new AlgWithReturn(p_msg, p_ret, tau, limit);
+                alg_sim(*alg);
+                for_each(alg->msgs.begin(), alg->msgs.end(), [](Message* msg) -> void { 
+                    delete msg;
+                });
             }
             else if (mode == "exp") {
                 alg_sim(AlgWithExpectation(p_msg, p_ret, tau, limit));
